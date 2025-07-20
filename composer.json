@@ -17,11 +17,12 @@
         }
     ],
     "require": {
-        "vlucas/phpdotenv": "^5.6"
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/yaml": "^7.3"
     },
     "scripts":{
-        "hello":["php scripts/dlm.php",
-        "php templates/compte/compte.html.php"]
+        "database:migrate":"php migrations/Migration.php",
+        "database:seed":"php seeder/Seeder.php"
 
     }
 }

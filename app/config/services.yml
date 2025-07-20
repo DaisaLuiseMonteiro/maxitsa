@@ -1,0 +1,34 @@
+services:
+  # Core services
+  app: App\Core\App
+  router: App\Core\Router
+  session: App\Core\Session
+  database: App\Core\Database
+  validate: App\Core\Validate
+  validator: App\Core\Validator
+  file_upload: App\Core\FileUpload
+
+  # Middlewares
+  middleware.auth: App\Core\Middlewares\Auth
+  middleware.crypt_password: App\Core\Middlewares\CryptPassword
+
+  # Abstracts
+  abstract.controller: App\Core\Abstract\AbstractController
+  abstract.entity: App\Core\Abstract\AbstractEntity
+  abstract.repository: App\Core\Abstract\AbstractRepository
+
+  # Entities
+  entity.compte: App\Entity\Compte
+  entity.transaction: App\Entity\Transaction
+  entity.user: App\Entity\User
+  entity.usertype: App\Entity\UserType
+
+  # Controllers
+  controller.compte: App\Controller\CompteController
+  controller.security: App\Controller\SecurityController
+
+  # Services
+  service.user: App\Service\UserService
+
+  # Repositories
+  repository.user: App\Repository\UserRepository

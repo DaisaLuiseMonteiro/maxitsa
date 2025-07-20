@@ -78,7 +78,6 @@
           <div class="font-semibold text-gray-800 mr-4">-12000 fcfa</div>
           <div class="text-green-800 bg-green-100 px-2 py-1 rounded text-sm font-medium">reussi</div>
         </div>
-
         <div class="flex items-center">
           <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center text-lg mr-4">✗</div>
           <div class="flex-grow">
