@@ -1,15 +1,16 @@
-FROM php:8.3-apache
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     zip \
     unzip \
+    nginx \
+    supervisor \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
-RUN a2enmod rewrite
-
-COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+COPY nginx.conf /etc/nginx/sites-available/default
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -22,6 +23,10 @@ RUN echo "DB_USER=${DB_USER}" > .env && \
     echo "APP_URL=${APP_URL}" >> .env && \
     echo "dsn=${dsn}" >> .env
 
-RUN chown -R www-data:www-data /app
+RUN chown -R www-data:www-data /app && \
+    mkdir -p /var/run/php && \
+    chown www-data:www-data /var/run/php
 
 EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
