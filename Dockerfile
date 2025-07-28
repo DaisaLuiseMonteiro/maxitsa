@@ -1,17 +1,32 @@
-# Utilisation de l'image officielle Node.js
-FROM node:16
+# Dockerfile
 
-# Définir le répertoire de travail dans le container
-WORKDIR /app
+FROM php:8.3-fpm
 
-# Copier les fichiers du projet dans le container
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    libpq-dev \
+    libzip-dev \
+    zip unzip \
+    git curl \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
 COPY . .
 
-# Installer les dépendances
-RUN npm install
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Exposer le port sur lequel l'application écoute
-EXPOSE 3000
+RUN echo "DB_USER=\${DB_USER}" > .env && \
+    echo "DB_PASSWORD=\${DB_PASSWORD}" >> .env && \
+    echo "APP_URL=\${APP_URL}" >> .env && \
+    echo "dsn=\${dsn}" >> .env
 
-# Commande pour démarrer l'application
-CMD ["npm", "start"]
+COPY nginx.conf /etc/nginx/sites-available/default
+COPY supervisord.conf /etc/supervisord.conf
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
