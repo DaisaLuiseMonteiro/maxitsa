@@ -16,9 +16,12 @@ class TelephoneRepository extends AbstractRepository{
 
     private static TelephoneRepository|null $instance = null;
 
-    public static function getInstance():TelephoneRepository{
+    public static function getInstance(UsersRepository $usersRepository = null, CompteRepository $compteRepository = null): TelephoneRepository{
         if(self::$instance == null){
-            self::$instance = new self();
+            if ($usersRepository === null || $compteRepository === null) {
+                throw new \Exception("TelephoneRepository::getInstance nécessite UsersRepository et CompteRepository");
+            }
+            self::$instance = new self($usersRepository, $compteRepository);
         }
         return self::$instance;
     }

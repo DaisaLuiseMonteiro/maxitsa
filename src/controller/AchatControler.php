@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Core\App;
 use App\Core\Session;
-
-
 use App\Core\Validator;
 use App\Service\TwilioService;
 use App\Service\SecurityService;
@@ -14,7 +12,7 @@ use App\Core\Abstract\AbstractController;
 
 
 
-class SecurityController extends AbstractController
+class AchatControler extends AbstractController
 {
 
     private SecurityService $securityService;
@@ -29,15 +27,11 @@ class SecurityController extends AbstractController
         parent::__construct(
             $this->session = $session
         );
-        $this->layout = 'security';
+        $this->layout = 'blanc';
         $this->securityService =   $securityService;
         $this->validator = $validator;
     }
-    public function index()
-    {
-        $this->unset('errors');
-        $this->render("login/login.php");
-    }
+    public function index() {}
 
     public function show() {}
     public function create() {}
@@ -45,37 +39,12 @@ class SecurityController extends AbstractController
     public function store() {}
 
     public function edit() {}
-    public function buy(){}
+    public function login() {}
 
-    public function login()
+    public function logout() {}
+    public function buy()
     {
-        require_once "../app/config/rules.php";
-
-        $loginData = $_POST;
-
-        if ($this->validator->validate($loginData,  $rules)) {
-            $user = $this->securityService->seConnecter($loginData['login'], $loginData['password']);
-            if ($user) {
-                $this->session->set("user", $user->toArray());
-                header("Location:" . APP_URL . "/compte");
-                exit();
-            } else {
-                $this->validator->addError('password', "Identifiant incorrect");
-                $this->session->set('errors', $this->validator->getErrors());
-                echo ("i m here");
-                $this->render("login/login.php");
-            }
-        } else {
-            echo ('mauvaise donne');
-            $this->session->set('errors', $this->validator->getErrors());
-            $this->render("login/login.php");
-        }
-    }
-
-    public function logout()
-    {
-        session_destroy();
-        header("Location:" . APP_URL);
+        require_once __DIR__ . '/../../templates/compte/woyofal.php';
     }
 
     private function validateForm(array &$data): array

@@ -1,5 +1,7 @@
-<?php 
+<?php
 
+use App\Controller\AchatControler;
+use App\Controller\AchatController;
 use App\Controller\CompteController;
 use App\Controller\SecurityController;
 use App\Controller\TransactionController;
@@ -90,7 +92,7 @@ $routes = [
     'middlewares' => ['auth']
 ],
 '/woyofal' => [
-    'controller' => CompteController::class,
+    'controller' =>   AchatControler::class,
     'method' => 'buy',
     'middlewares' => ['auth']
 ],

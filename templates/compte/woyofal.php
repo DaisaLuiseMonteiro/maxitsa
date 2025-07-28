@@ -6,7 +6,13 @@
     <title>Woyofal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-600 to-purple-700 flex items-center justify-center p-5">
+<body class="min-h-screen bg-gray-100 flex items-center justify-center p-5">
+    <a href="compte" class="absolute top-6 left-6 bg-white rounded-full shadow-lg p-2 hover:bg-gray-100 transition flex items-center justify-center" title="Retour">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-orange-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+    </a>
+
     <div class="flex items-center justify-center w-full h-full">
         <div class="bg-white/95 backdrop-blur-lg rounded-3xl p-10 shadow-2xl w-full max-w-md border border-white/20">
             <div class="text-center mb-8">
@@ -34,6 +40,9 @@
                     <div class="text-red-500 text-sm mt-1 hidden" id="counterError">
                         Veuillez saisir un numéro de compteur valide (10-14 chiffres)
                     </div>
+                    <div class="text-red-500 text-sm mt-1 hidden text-center" id="counterNotFoundError">
+                        Compteur non trouvé
+                    </div>
                 </div>
 
                 <div>
@@ -57,7 +66,7 @@
 
                 <button 
                     type="submit" 
-                    class="w-full py-5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-none rounded-xl text-lg font-bold cursor-pointer transition-all duration-300 mt-5 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-300/30 active:-translate-y-0"
+                    class="w-full py-5 bg-gradient-to-r from-orange-400 to-orange-600 text-white border-none rounded-xl text-lg font-bold cursor-pointer transition-all duration-300 mt-5 hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-300/30 active:-translate-y-0"
                 >
                      Valider l'achat
                 </button>
@@ -93,5 +102,56 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('simulatorForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const counterNumber = document.getElementById('counterNumber').value.trim();
+            const amount = document.getElementById('amount').value.trim();
+            const counterError = document.getElementById('counterError');
+            const amountError = document.getElementById('amountError');
+            const counterNotFoundError = document.getElementById('counterNotFoundError');
+            let valid = true;
+
+            counterError.classList.add('hidden');
+            amountError.classList.add('hidden');
+            counterNotFoundError.classList.add('hidden');
+
+            // Validate counter number
+            if (!/^\d{10,14}$/.test(counterNumber)) {
+                counterError.classList.remove('hidden');
+                valid = false;
+            }
+            // Validate amount
+            if (isNaN(amount) || amount < 500 || amount > 100000) {
+                amountError.classList.remove('hidden');
+                valid = false;
+            }
+            if (!valid) return;
+
+            // Check compteur existence via API
+            fetch(`https://appdafapi.onrender.com/api/citoyens/${counterNumber}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Compteur non trouvé");
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.data) {
+                        // Show result block and fill values
+                        document.getElementById('resultCounter').textContent = counterNumber;
+                        document.getElementById('resultAmount').textContent = amount + ' FCFA';
+                        document.getElementById('resultFees').textContent = '100 FCFA'; // Example fee
+                        document.getElementById('resultCredit').textContent = (amount - 100) + ' FCFA';
+                        document.getElementById('resultCode').textContent = Math.random().toString(36).substring(2, 10).toUpperCase();
+                        document.getElementById('result').classList.remove('hidden');
+                    } else {
+                        counterNotFoundError.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    counterNotFoundError.classList.remove('hidden');
+                });
+        });
+    </script>
 </body>
 </html>

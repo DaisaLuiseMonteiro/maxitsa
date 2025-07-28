@@ -64,10 +64,9 @@ class CompteController extends AbstractController{
             'comptes' => $comptes]);
      }
         public function buy(){
-        $comptes = $this->compteService->comptesSecondairesClient($this->session->get('user','id'));
-        $this->render('compte/woyofal.php', [
-            'comptes' => $comptes
-        ]);
+        // $comptes = $this->compteService->comptesSecondairesClient($this->session->get('user','id'));
+        // $this->render('woyofal.php', [
+        //     'comptes' => $comptes]);
      }
 
      private function validateForm(array &$data): array {

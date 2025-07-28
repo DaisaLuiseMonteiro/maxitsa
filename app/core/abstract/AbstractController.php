@@ -35,7 +35,8 @@ abstract class AbstractController extends Session
     abstract public function store();
     abstract public function edit();
     abstract public function buy();
-   // abstract public function destroy();
+
+    // abstract public function destroy();
     abstract public function show();
 
 
@@ -43,19 +44,11 @@ abstract class AbstractController extends Session
 
     public function render(string $views, array $data = [])
     {
-        try {
-            extract($data);
-            $viewPath = '../templates/' . $views;
-            if (!file_exists($viewPath)) {
-                throw new \Exception("Vue introuvable : " . $viewPath);
-            }
-            ob_start();
-            require_once $viewPath;
-            $contentForLayout = ob_get_clean();
-            require_once '../templates/layout/' . $this->layout . '.layout.php';
-        } catch (\Throwable $e) {
-            echo '<div style="color:red;">Erreur lors du rendu de la vue : ' . $e->getMessage() . '</div>';
-        }
+        extract($data);
+        ob_start();
+        require_once '../templates/' . $views;
+        $contentForLayout = ob_get_clean();
+        require_once '../templates/layout/' . $this->layout . '.layout.php';
     }
 
     public function uploadPhotos(array $files): string|false
@@ -76,30 +69,25 @@ abstract class AbstractController extends Session
     }
 
 
-    public function fetchAPI($url)
+    public  function fetchAPI($url)
     {
-        try {
-            $context = stream_context_create([
-                'http' => [
-                    'method' => 'GET',
-                    'header' => [
-                        'Content-Type: application/json',
-                        'Accept: application/json'
-                    ],
-                    'timeout' => 30
-                ]
-            ]);
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'Content-Type: application/json',
+                    'Accept: application/json'
+                ],
+                'timeout' => 30
+            ]
+        ]);
 
-            $response = file_get_contents($url, false, $context);
+        $response = file_get_contents($url, false, $context);
 
-            if ($response === false) {
-                throw new \Exception('Erreur lors de la récupération des données');
-            }
-
-            return json_decode($response, true);
-        } catch (\Exception $e) {
-            echo '<div style="color:red;">Erreur API : ' . $e->getMessage() . '</div>';
-            return null;
+        if ($response === false) {
+            throw new \Exception('Erreur lors de la récupération des données');
         }
+
+        return json_decode($response, true);
     }
 }
