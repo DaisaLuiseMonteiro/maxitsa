@@ -14,6 +14,9 @@ class Database{
       protected function __construct() {
         
         try {
+            // Debug temporaire
+            error_log("DSN utilisé: " . DSN);
+            error_log("DB_USER utilisé: " . DB_USER);
            
             $this->connection = new PDO(
               DSN,
