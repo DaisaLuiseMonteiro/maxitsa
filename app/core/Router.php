@@ -36,7 +36,9 @@ class Router{
             $controller = App::get($controllerClass);
             $controller->$method();
         } else {
-           
+            http_response_code(404);
+            echo "File not found. Route '$currentUri' n'existe pas.";
+            echo "<br>Routes disponibles: " . implode(', ', array_keys($uris));
         }
     }
 }
