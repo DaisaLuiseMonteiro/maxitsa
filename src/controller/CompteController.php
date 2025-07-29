@@ -70,7 +70,7 @@ class CompteController extends AbstractController{
      }
 
      private function validateForm(array &$data): array {
-      require_once "../app/config/rules.php";
+      require_once __DIR__ . "/../../app/config/rules.php";
       $this->validator->validate($data, $rules);
       return $this->validator->getErrors();
 }
@@ -88,7 +88,7 @@ private function buildUserData(array $data, string $photoPath): array {
     ];
 }
 public function createCompteSecondaire() { 
-    require_once "../app/config/rules.php";
+    require_once __DIR__ . "/../../app/config/rules.php";
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {

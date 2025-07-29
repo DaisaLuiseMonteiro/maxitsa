@@ -23,10 +23,10 @@
 <body class="bg-gray-100 font-sans">
       <div class="flex h-screen bg-white">
          
-    <?php require_once '../templates/layout/partial/leftbar.php'; ?>
+    <?php require_once __DIR__ . '/partial/leftbar.php'; ?>
         
         <div class="flex-1 flex flex-col">
-    <?php require_once '../templates/layout/partial/header.html.php'; ?>
+    <?php require_once __DIR__ . '/partial/header.html.php'; ?>
         <div class="grid grid-cols-5 gap-16 m-8">
                     <div class="bg-orange-maxit rounded-3xl h-28 shadow-sm"></div>
                     <div class="bg-orange-maxit rounded-3xl h-28 shadow-sm"></div>

@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: maxitsa-app
+    env: docker
+    dockerfilePath: ./Dockerfile.render
+    envVars:
+      - key: DB_USER
+        value: maxitsa_user
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: DSN
+        value: pgsql:host=${DATABASE_HOST};port=5432;dbname=${DATABASE_NAME}
+      - key: APP_URL
+        value: https://maxitsa-app.onrender.com
+      - key: TWILIO_SID
+        value: ""
+      - key: TWILIO_TOKEN
+        value: ""
+      - key: TWILIO_FROM
+        value: ""
+      - key: RUN_MIGRATIONS
+        value: true
+    
+  - type: pserv
+    name: maxitsa-db
+    env: postgresql
+    plan: free
+    databaseName: maxitsa
+    databaseUser: maxitsa_user
+    
+# Configuration des builds
+buildCommand: |
+  # Rien à faire, Docker se charge de tout
+  
+# Configuration du démarrage
+startCommand: |
+  /start.sh

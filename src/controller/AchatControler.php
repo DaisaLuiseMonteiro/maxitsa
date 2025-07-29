@@ -49,7 +49,7 @@ class AchatControler extends AbstractController
 
     private function validateForm(array &$data): array
     {
-        require_once "../app/config/rules.php";
+        require_once __DIR__ . "/../../app/config/rules.php";
         $this->validator->validate($data, $rules);
         return $this->validator->getErrors();
     }

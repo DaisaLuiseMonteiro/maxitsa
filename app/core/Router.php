@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-require_once "../app/config/middlewares.php";
+require_once __DIR__ . "/../config/middlewares.php";
 
 
 class Router{
