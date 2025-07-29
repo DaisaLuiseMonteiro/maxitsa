@@ -56,25 +56,7 @@ RUN mkdir -p /var/run/php /var/log/supervisor /var/www/html/public/uploads && \
 EXPOSE 80
 
 # Script de démarrage pour Render
-RUN cat > /start.sh << 'EOF'
-#!/bin/bash
-set -e
-
-# Configuration du port pour nginx - Render utilise PORT
-if [ ! -z "$PORT" ]; then
-    sed -i "s/listen 80;/listen $PORT;/g" /etc/nginx/sites-available/default
-    sed -i "s/listen \${PORT:-80};/listen $PORT;/g" /etc/nginx/sites-available/default
-fi
-
-# Exécuter les migrations si nécessaire
-if [ "$RUN_MIGRATIONS" = "true" ]; then
-    php migrations/Migration.php || echo "Migration failed"
-    php seeders/Seeder.php || echo "Seeder failed"
-fi
-
-# Démarrer supervisord
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
-EOF
+RUN printf '#!/bin/bash\nset -e\n\n# Configuration du port pour nginx - Render utilise PORT\nif [ ! -z "$PORT" ]; then\n    sed -i "s/listen 80;/listen $PORT;/g" /etc/nginx/sites-available/default\n    sed -i "s/listen \\${PORT:-80};/listen $PORT;/g" /etc/nginx/sites-available/default\nfi\n\n# Exécuter les migrations si nécessaire\nif [ "$RUN_MIGRATIONS" = "true" ]; then\n    php migrations/Migration.php || echo "Migration failed"\n    php seeders/Seeder.php || echo "Seeder failed"\nfi\n\n# Démarrer supervisord\nexec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf\n' > /start.sh
 
 RUN chmod +x /start.sh
 
