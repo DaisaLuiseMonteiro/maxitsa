@@ -43,7 +43,7 @@ RUN echo "DB_USER=\${DB_USER}" > .env && \
     echo "IMG_DIR=/var/www/html/public/uploads" >> .env
 
 # Copier la configuration nginx pour Render ou utiliser la configuration existante
-COPY nginx.render.conf /etc/nginx/sites-available/default || COPY nginx.conf /etc/nginx/sites-available/default
+COPY nginx.render.conf /etc/nginx/sites-available/default
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Créer les répertoires nécessaires et configurer les permissions

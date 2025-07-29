@@ -46,9 +46,9 @@ abstract class AbstractController extends Session
     {
         extract($data);
         ob_start();
-        require_once __DIR__ . '/../../templates/' . $views;
+        require_once __DIR__ . '/../../../templates/' . $views;
         $contentForLayout = ob_get_clean();
-        require_once __DIR__ . '/../../templates/layout/' . $this->layout . '.layout.php';
+        require_once __DIR__ . '/../../../templates/layout/' . $this->layout . '.layout.php';
     }
 
     public function uploadPhotos(array $files): string|false
