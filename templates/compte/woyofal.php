@@ -32,13 +32,13 @@
                         type="text" 
                         id="counterNumber" 
                         name="counterNumber" 
-                        placeholder="Ex: 12345678901234" 
+                        placeholder="Ex: CPT123456" 
                         required 
-                        maxlength="14"
+                        maxlength="15"
                         class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300 hover:-translate-y-1"
                     >
                     <div class="text-red-500 text-sm mt-1 hidden" id="counterError">
-                        Veuillez saisir un numéro de compteur valide (10-14 chiffres)
+                        Veuillez saisir un numéro de compteur valide (3-15 caractères alphanumériques)
                     </div>
                     <div class="text-red-500 text-sm mt-1 hidden text-center" id="counterNotFoundError">
                         Compteur non trouvé
@@ -117,8 +117,8 @@
             amountError.classList.add('hidden');
             counterNotFoundError.classList.add('hidden');
 
-            // Validate counter number
-            if (!/^\d{10,14}$/.test(counterNumber)) {
+            // Validate counter number (alphanumeric 3-15 characters)
+            if (!/^[A-Za-z0-9]{3,15}$/.test(counterNumber)) {
                 counterError.classList.remove('hidden');
                 valid = false;
             }
@@ -129,14 +129,14 @@
             }
             if (!valid) return;
 
-            // Check compteur existence via API
-            fetch(`https://appdafapi.onrender.com/api/citoyens/${counterNumber}`)
+            // Check compteur existence via API Woyofal
+            fetch(`https://appwoyofal-tl07.onrender.com/api/woyofal/compteur/${counterNumber}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Compteur non trouvé");
                     return response.json();
                 })
                 .then(data => {
-                    if (data && data.data) {
+                    if (data) {
                         // Show result block and fill values
                         document.getElementById('resultCounter').textContent = counterNumber;
                         document.getElementById('resultAmount').textContent = amount + ' FCFA';
