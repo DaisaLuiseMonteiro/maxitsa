@@ -49,25 +49,36 @@ class SecurityController extends AbstractController
 
     public function login()
     {
-        require_once __DIR__ . "/../../app/config/rules.php";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once __DIR__ . "/../../app/config/rules.php";
 
-        $loginData = $_POST;
+            $loginData = $_POST;
 
-        if ($this->validator->validate($loginData,  $rules)) {
-            $user = $this->securityService->seConnecter($loginData['login'], $loginData['password']);
-            if ($user) {
-                $this->session->set("user", $user->toArray());
-                header("Location:" . APP_URL . "/compte");
-                exit();
-            } else {
-                $this->validator->addError('password', "Identifiant incorrect");
+            // Vérifier que les champs requis sont présents
+            if (!isset($loginData['login']) || !isset($loginData['password'])) {
+                $this->validator->addError('login', "Login et mot de passe requis");
                 $this->session->set('errors', $this->validator->getErrors());
-                echo ("i m here");
+                $this->render("login/login.php");
+                return;
+            }
+
+            if ($this->validator->validate($loginData,  $rules)) {
+                $user = $this->securityService->seConnecter($loginData['login'], $loginData['password']);
+                if ($user) {
+                    $this->session->set("user", $user->toArray());
+                    header("Location:" . APP_URL . "/compte");
+                    exit();
+                } else {
+                    $this->validator->addError('password', "Identifiant incorrect");
+                    $this->session->set('errors', $this->validator->getErrors());
+                    $this->render("login/login.php");
+                }
+            } else {
+                $this->session->set('errors', $this->validator->getErrors());
                 $this->render("login/login.php");
             }
         } else {
-            echo ('mauvaise donne');
-            $this->session->set('errors', $this->validator->getErrors());
+            // Si c'est une requête GET, afficher le formulaire
             $this->render("login/login.php");
         }
     }
