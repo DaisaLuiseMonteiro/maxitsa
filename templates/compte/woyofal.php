@@ -132,23 +132,31 @@
             // Check compteur existence via API Woyofal
             fetch(`https://appwoyofal-tl07.onrender.com/api/woyofal/compteur/${counterNumber}`)
                 .then(response => {
-                    if (!response.ok) throw new Error("Compteur non trouvé");
-                    return response.json();
-                })
-                .then(data => {
-                    if (data) {
-                        // Show result block and fill values
-                        document.getElementById('resultCounter').textContent = counterNumber;
-                        document.getElementById('resultAmount').textContent = amount + ' FCFA';
-                        document.getElementById('resultFees').textContent = '100 FCFA'; // Example fee
-                        document.getElementById('resultCredit').textContent = (amount - 100) + ' FCFA';
-                        document.getElementById('resultCode').textContent = Math.random().toString(36).substring(2, 10).toUpperCase();
-                        document.getElementById('result').classList.remove('hidden');
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    
+                    if (response.status === 200) {
+                        return response.json();
+                    } else if (response.status === 404) {
+                        throw new Error("Compteur non trouvé");
                     } else {
-                        counterNotFoundError.classList.remove('hidden');
+                        throw new Error(`Erreur API: ${response.status}`);
                     }
                 })
+                .then(data => {
+                    console.log('API Response data:', data);
+                    
+                    // Si on arrive ici, le compteur existe
+                    // Afficher le message de succès
+                    document.getElementById('resultCounter').textContent = counterNumber;
+                    document.getElementById('resultAmount').textContent = amount + ' FCFA';
+                    document.getElementById('resultFees').textContent = '100 FCFA';
+                    document.getElementById('resultCredit').textContent = (amount - 100) + ' FCFA';
+                    document.getElementById('resultCode').textContent = Math.random().toString(36).substring(2, 10).toUpperCase();
+                    document.getElementById('result').classList.remove('hidden');
+                })
                 .catch(error => {
+                    console.error('Erreur API:', error);
                     counterNotFoundError.classList.remove('hidden');
                 });
         });
